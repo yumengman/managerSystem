@@ -4,17 +4,15 @@ import store from '../store'
 import { getToken } from '@/utils/auth'
 
 // 创建axios实例
-let service =  axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+const service =  axios.create({
+  baseURL: 'http://localhost:8781', // api的base_url
   timeout: 5000 // 请求超时时间
 })
 // request拦截器
 service.interceptors.request.use(config => {
-  if (store.getters.token) {
-    config.headers = {
-      'Authorization' : "Token " + getToken(), //携带权限参数
-     };
-  }
+  config.headers = {
+    'token' : getToken(), //携带token
+  };
   return config
 }, error => {
   Promise.reject(error)
@@ -28,15 +26,15 @@ service.interceptors.response.use(
   * code:200,接口正常返回;-1:返回的数据不对;
   */
   const res = response.data
-    if (res.code !== 200) {
+    if (res.code != 0) {
       Message({
         message: res.message,
         type: 'error',
         duration: 5 * 1000
       })
       // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+      if (res.code === 402 ) {
+        MessageBox.confirm('登陆以失效，请重新登陆！', '', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
@@ -45,6 +43,18 @@ service.interceptors.response.use(
             location.reload()// 为了重新实例化vue-router对象 避免bug
           })
         })
+      }else if (res.code === 403 ) {
+        MessageBox.alert('网络拥堵，稍后重试').then(r => {
+
+        });
+      }else if (res.code === 404 ) {
+        MessageBox.alert('接口找不到').then(r => {
+
+        });
+      }else if (res.code === 500 ) {
+        MessageBox.alert('网络异常').then(r => {
+
+        });
       }
       return Promise.reject('error')
     } else {

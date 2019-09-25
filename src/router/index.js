@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import Home from '@/components/layout/home'
 import contentMain from '@/components/layout/contentMain'
 import index from '@/page/index'
@@ -12,36 +11,24 @@ Vue.use(Router)
 //默认不需要权限的页面
 export const constantRouterMap = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: Home,
     children:slidePath
   },
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: login,
   }
 ]
 export default new Router({
   routes: constantRouterMap
-      // [
-      // {
-      //   path: '/',
-      //   name: 'Home',
-      //   component: Home,
-      //   children:slidePath
-      // },
-      // {
-      //   path: '/login',
-      //   name: 'login',
-      //   component: login,
-      // }
 })
 //异步路由（需要权限的页面）
 export const asyncRouterMap = [
   {
-    path: '/',
+    path: '/index',
     name: 'index',
     component: index,
     meta: {
@@ -67,16 +54,16 @@ export const asyncRouterMap = [
             icon: 'el-icon-user',
         },
         //component:userinfo
-        component: () => import('@/page/user/userinfo'), 
+        component: () => import('@/page/user/userinfo'),
       },{
         path: 'changePwd',
         name:'changePwd',
         meta: {
             title: '修改密码',
-            icon: 'el-icon-user',                    
+            icon: 'el-icon-user',
         },
         //component:changePwd
-        component: () => import('@/page/user/changePwd'), 
+        component: () => import('@/page/user/changePwd'),
       },
     ]
   },
@@ -96,19 +83,19 @@ export const asyncRouterMap = [
       name:'goodsMessage',
       meta: {
           title: '商品信息',
-          icon: 'el-icon-menu', 
+          icon: 'el-icon-menu',
       },
       //component:goodsMessage
-      component: () => import('@/page/goodsManager/goodsMessage'), 
+      component: () => import('@/page/goodsManager/goodsMessage'),
     },{
       path: 'orderMessage',
       name:'orderMessage',
       meta: {
           title: '订单信息',
-          icon: 'el-icon-menu',  
+          icon: 'el-icon-menu',
       },
       //component:orderMessage
-      component: () => import('@/page/goodsManager/orderMessage'), 
+      component: () => import('@/page/goodsManager/orderMessage'),
     }
   ]
 },
@@ -128,21 +115,21 @@ export const asyncRouterMap = [
       meta: {
           title: '数据统计',
           icon: ' ',
-          
+
       },
       //component:dataStatistical
-      component: () => import('@/page/statistical/dataStatistical'), 
+      component: () => import('@/page/statistical/dataStatistical'),
     },{
       path: 'scoreStatistical',
       name: 'scoreStatistical',
       meta: {
           title: '得分统计',
           icon: ' ',
-          
+
       },
       //component:scoreStatistical
-      component: () => import('@/page/statistical/scoreStatistical'), 
+      component: () => import('@/page/statistical/scoreStatistical'),
     },
-] 
+]
 }
 ]

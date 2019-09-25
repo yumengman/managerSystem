@@ -6,11 +6,14 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui';
 import echarts from 'echarts'
+import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 Vue.use(ElementUI);
+// 全局注册axios
+Vue.prototype.$http = axios
 
 /* eslint-disable no-new */
 new Vue({

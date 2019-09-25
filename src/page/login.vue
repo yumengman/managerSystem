@@ -16,32 +16,28 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
-                <div class="tiparea">
-                    <p class="wxtip">温馨提示：</p>
-                    <p class="tip">用户名为：admin
-                        <!-- /editor<span class="tips">(可用于切换权限)</span> -->
-                    </p>
-                    <p class="tip">密码为：123456</p>
-                </div>
             </el-form>
         </div>
     </div>
 </template>
 
 <script>
+import request from '@/utils/request'
+import {setToken} from '@/utils/auth'
     export default {
         data: function(){
             return {
                 ruleForm: {
-                    username: 'admin',
-                    password: '123123'
+                    username: '18537757128',
+                    password: '123456'
                 },
                 rules: {
                     username: [
                         { required: true, message: '请输入用户名', trigger: 'blur' }
                     ],
                     password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' }
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                        {min: 6, max: 18, message: '密码最少6位', trigger: 'blur'}
                     ]
                 }
             }
@@ -50,8 +46,18 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        localStorage.setItem('ms_username',this.ruleForm.username);
-                        this.$router.push('/');
+                        let data = {'mobile':this.ruleForm.username,'password':this.ruleForm.password};
+                        request({
+                            url: '/api/login.json',
+                            method: 'post',
+                            data: data
+                        }).then(response => {
+                            localStorage.setItem('ms_username',response.data.dataUser.userName);
+                            setToken(response.data.token);
+                            this.$router.push('/home');
+                        }).catch(error => {
+                            console.error(error);
+                        });
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -75,7 +81,7 @@
         line-height: 50px;
         text-align: center;
         font-size:20px;
-        color: #fff;
+        color: #0f0f0f;
         border-bottom: 1px solid #ddd;
     }
     .ms-login{
