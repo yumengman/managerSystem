@@ -53,6 +53,7 @@ import {setToken} from '@/utils/auth'
                             data: data
                         }).then(response => {
                             localStorage.setItem('ms_username',response.data.dataUser.userName);
+                            localStorage.setItem('mobile',this.ruleForm.username);
                             setToken(response.data.token);
                             this.$router.push('/home');
                         }).catch(error => {

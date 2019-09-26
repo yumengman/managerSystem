@@ -1,6 +1,6 @@
 <template>
 <div>
-    
+
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item>
@@ -14,20 +14,6 @@
 				</el-form-item>
 			</el-form>
 		</el-col>
-   
-    <!-- <el-table
-        ref="multipleTable"
-        :data="tableData"
-        tooltip-effect="dark"
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="日期" width="120">
-        <template slot-scope="scope">{{ scope.row.date }}</template>
-        </el-table-column>
-        <el-table-column prop="name" label="姓名" width="120"></el-table-column>
-        <el-table-column prop="address" label="地址" show-overflow-tooltip></el-table-column>
-    </el-table> -->
 
     <el-table :data="tableData" highlight-current-row v-loading="listLoading" @selection-change="handleSelectionChange" style="width: 100%;">
 			<el-table-column type="selection" width="55"></el-table-column>
@@ -74,8 +60,8 @@
 			</div>
 		</el-dialog>
 </div>
-    
-  
+
+
 </template>
 
 <script>
@@ -167,7 +153,7 @@ return {
         currentPage:1,
         totalCount:1000,
         pagesize:10,
-		
+
 };
 },
 //监听属性 类似于data概念
@@ -189,7 +175,7 @@ methods: {
     },
     handleCurrentChange(val) {
         this.currentPage = val;
-        
+
     },
      handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -204,7 +190,7 @@ methods: {
           console.log('handleDel')
       },
      handleEdit: function (index, row) {
-         
+
         this.editFormVisible = true;
         console.log(this.editFormVisible,111)
         this.editForm = Object.assign({}, row);

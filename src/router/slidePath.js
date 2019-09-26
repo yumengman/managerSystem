@@ -37,17 +37,25 @@ export default [
                     icon: 'el-icon-user',
                 },
                 //component:userinfo
-                component: () => import('@/page/user/userinfo'), 
+                component: () => import('@/page/user/userinfo'),
               },{
                 path: 'changePwd',
                 name:'changePwd',
                 meta: {
                     title: '修改密码',
-                    icon: 'el-icon-user',                    
+                    icon: 'el-icon-user',
                 },
                 //component:changePwd
-                component: () => import('@/page/user/changePwd'), 
-              },
+                component: () => import('@/page/user/changePwd'),
+              },{
+                    path: 'userList',
+                    name:'userList',
+                    meta: {
+                        title: '用户列表',
+                        icon: 'el-icon-user',
+                    },
+                    component: () => import('@/page/user/userList'),
+                },
             ]
           },
 
@@ -59,26 +67,26 @@ export default [
                 title: '商品管理',
                 icon: 'el-icon-menu',
             },
-        
+
           children:[
             {
               path: 'goodsMessage',
               name:'goodsMessage',
               meta: {
                   title: '商品信息',
-                  icon: 'el-icon-menu', 
+                  icon: 'el-icon-menu',
               },
               //component:goodsMessage
-              component: () => import('@/page/goodsManager/goodsMessage'), 
+              component: () => import('@/page/goodsManager/goodsMessage'),
             },{
               path: 'orderMessage',
               name:'orderMessage',
               meta: {
                   title: '订单信息',
-                  icon: 'el-icon-menu',  
+                  icon: 'el-icon-menu',
               },
               //component:orderMessage
-              component: () => import('@/page/goodsManager/orderMessage'), 
+              component: () => import('@/page/goodsManager/orderMessage'),
             }
           ]
         },
@@ -98,24 +106,24 @@ export default [
               meta: {
                   title: '数据统计',
                   icon: ' ',
-                  
+
               },
               //component:dataStatistical
-              component: () => import('@/page/statistical/dataStatistical'), 
+              component: () => import('@/page/statistical/dataStatistical'),
             },{
               path: 'scoreStatistical',
               name: 'scoreStatistical',
               meta: {
                   title: '得分统计',
                   icon: ' ',
-                  
+
               },
               //component:scoreStatistical
-              component: () => import('@/page/statistical/scoreStatistical'), 
+              component: () => import('@/page/statistical/scoreStatistical'),
             },
-        ] 
+        ]
         }
-    
-    
+
+
 ]
 

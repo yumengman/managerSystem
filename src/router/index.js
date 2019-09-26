@@ -64,6 +64,14 @@ export const asyncRouterMap = [
         },
         //component:changePwd
         component: () => import('@/page/user/changePwd'),
+      },{
+        path: 'userList',
+        name:'userList',
+        meta: {
+          title: '用户列表',
+          icon: 'el-icon-user',
+        },
+        component: () => import('@/page/user/userList'),
       },
     ]
   },
