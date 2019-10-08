@@ -44,7 +44,9 @@ export default {
     },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {
-
+        if (this.username == undefined || this.username == '' || this.username == null || this.username == "null"){
+            this.username = localStorage.getItem('mobile');
+        }
     },
     //生命周期 - 挂载完成（可以访问DOM元素）
     mounted() {

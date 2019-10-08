@@ -2,7 +2,7 @@
     <div>
         <!--    查询条件    -->
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-            <el-form :inline="true" :model="selectForm">
+            <el-form :inline="true" :model="selectForm" rel="selectForm">
                 <el-form-item label="用户名称" prop="userName">
                     <el-input v-model="selectForm.userName" placeholder="用户名称"></el-input>
                 </el-form-item>
@@ -10,13 +10,13 @@
                     <el-input v-model="selectForm.mobile" placeholder="用户手机号"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" v-on:click="getUserList">查询</el-button>
+                    <el-button type="primary" @click="getUserList">查询</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" v-on:click="reset">重置</el-button>
+                    <el-button type="primary" @click="reset">重置</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" v-on:click="handleadd">新增</el-button>
+                    <el-button type="primary" @click="handleadd">新增</el-button>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="deleteUserList(sels)" :disabled="this.sels.length === 0"> 批量删除</el-button>
@@ -52,7 +52,7 @@
                         @current-change = "handleCurrentChangePage"
                         :current-page="currentPage"
                         :page-sizes="[10, 20, 40]"
-                        :page-size="pagesize"
+                        :page-size="pageSize"
                         :page-count="7"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="totalCount">
@@ -68,12 +68,12 @@
                 <el-form-item label="手机号" prop="mobile">
                     <el-input v-model="insertForm.mobile" auto-complete="off" ></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="insertForm.password" auto-complete="off" ></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" prop="checkPass">
-                    <el-input type="password" v-model="insertForm.checkPass" auto-complete="off" ></el-input>
-                </el-form-item>
+<!--                <el-form-item label="密码" prop="password">-->
+<!--                    <el-input type="password" v-model="insertForm.password" auto-complete="off" ></el-input>-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="确认密码" prop="checkPass">-->
+<!--                    <el-input type="password" v-model="insertForm.checkPass" auto-complete="off" ></el-input>-->
+<!--                </el-form-item>-->
                 <el-form-item label="地址" prop="address">
                     <el-input type="textarea" v-model="insertForm.address" auto-complete="off"></el-input>
                 </el-form-item>
@@ -82,8 +82,9 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click.native="insertFormVisible = false">取消</el-button>
+                <el-button @click ="insertFormVisible = false">取消</el-button>
                 <el-button type="primary" @click.native="addUser" >提交</el-button>
+                <el-button @click ="addCancel" >重置</el-button>
             </div>
         </el-dialog>
         <!-- 编辑弹框       -->
@@ -93,7 +94,7 @@
                     <el-input v-model="insertForm.userName" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号" prop="mobile">
-                    <el-input v-model="insertForm.mobile" auto-complete="off" ></el-input>
+                    <el-input v-model="insertForm.mobile" :disabled="true" auto-complete="off" ></el-input>
                 </el-form-item>
                 <el-form-item label="地址" prop="address">
                     <el-input type="textarea" v-model="insertForm.address" auto-complete="off"></el-input>
@@ -112,14 +113,16 @@
 
 <script>
 import request from '@/utils/request'
+import { MessageBox } from 'element-ui'
 export default {
     name: "userList",
     data() {
+        // 定义数据类型
         return {
             insertFormVisible: false,
             editFormVisible: false,
             currentPage: 1, //初始页
-            pagesize: 10, // 每页条数
+            pageSize: 10, // 每页条数
             totalCount: 1, // 总条数
             userList: [], // 列表记录
             sels: [],//选中的记录
@@ -131,23 +134,23 @@ export default {
                     { required: true, message: '请输入手机号', trigger: 'blur' },
                     { pattern: /^((13|14|15|17|18|16|19)[0-9]\d{8})$/, message: '手机号格式输入错误' }
                 ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 6, max: 18, message: '密码长度在6位至18位之间', trigger: 'blur' }
-                ],
-                checkPass: [
-                    { required: true, message: '请在次输入密码', trigger: 'blur' },
-                    { validator:(rule,value,callback)=>{
-                            if(value===''){
-                                callback(new Error('请再次输入密码'))
-                            }else if(value!==this.insertForm.password){
-                                callback(new Error('两次输入密码不一致'))
-                            }else{
-                                callback( )
-                            }
-                        }
-                    }
-                ],
+                // password: [
+                //     { required: true, message: '请输入密码', trigger: 'blur' },
+                //     { min: 6, max: 18, message: '密码长度在6位至18位之间', trigger: 'blur' }
+                // ],
+                // checkPass: [
+                //     { required: true, message: '请在次输入密码', trigger: 'blur' },
+                //     { validator:(rule,value,callback)=>{
+                //             if(value===''){
+                //                 callback(new Error('请再次输入密码'))
+                //             }else if(value!==this.insertForm.password){
+                //                 callback(new Error('两次输入密码不一致'))
+                //             }else{
+                //                 callback( )
+                //             }
+                //         }
+                //     }
+                // ],
             },
             selectForm: {
                 userName: '',
@@ -167,9 +170,11 @@ export default {
             },
         }
     },
+    // 初始化执行
     mounted() {
         this.getUserList();
     },
+    // 所有方法
     methods: {
         // 获取用户列表
         getUserList() {
@@ -178,7 +183,7 @@ export default {
                 method: 'post',
                 data: {
                     pageNum: this.currentPage,
-                    pageSize: this.pagesize,
+                    pageSize: this.pageSize,
                     userName: this.selectForm.userName,
                     mobile: this.selectForm.mobile,
                 }
@@ -193,24 +198,30 @@ export default {
         },
         // 新增用户
         addUser(){
-            request({
-                url: '/api/regist.json',
-                method: 'post',
-                data:{
-                    userName: this.insertForm.userName,
-                    mobile: this.insertForm.mobile,
-                    address: this.insertForm.address,
-                    password: this.insertForm.password,
-                    remarks: this.insertForm.remarks,
-                }
-            }).then(response =>{
-                if (response.code != 0) {
-                    this.$message.error(response.message)
+            this.$refs['insertForm'].validate((valid) =>{
+                if (valid){
+                    request({
+                        url: '/api/regist.json',
+                        method: 'post',
+                        data:{
+                            userName: this.insertForm.userName,
+                            mobile: this.insertForm.mobile,
+                            address: this.insertForm.address,
+                            password: this.insertForm.password,
+                            remarks: this.insertForm.remarks,
+                        }
+                    }).then(response =>{
+                        if (response.code != 0) {
+                            this.$message.error(response.message)
+                        } else {
+                            this.insertFormVisible = false;
+                            this.getUserList(); // 刷新列表
+                        }
+                    })
                 } else {
-                    this.insertFormVisible = false;
-                    this.getUserList(); // 刷新列表
+                    return false;
                 }
-            })
+            });
         },
         // 修改用户
         updateUser(){
@@ -240,25 +251,31 @@ export default {
             });
         },
         deleteUserList(){
-            var selsIds = [];
+            let selsIds = [];
             for(let i = 0; i < this.sels.length; i++){
                 selsIds.push(this.sels[i].id);
             }
-            request({
-                url: '/api/delete.json',
-                method: 'post',
-                data: selsIds ,
-            }).then(response =>{
-                if (response.code != 0) {
-                    this.$message.error(response.message)
-                } else {
-                    this.getUserList(); // 刷新列表
-                }
-            });
+
+            MessageBox.confirm('确定要删除账号？', '温馨提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(() => {
+                request({
+                    url: '/api/delete.json',
+                    method: 'post',
+                    data: selsIds ,
+                }).then(response =>{
+                    if (response.code != 0) {
+                        this.$message.error(response.message)
+                    } else {
+                        this.getUserList(); // 刷新列表
+                    }
+                });
+            })
         },
         // 修改每页条数
         handleSizeChange: function (size) {
-            this.pagesize = size;
+            this.pageSize = size;
             this.getUserList();
         },
         // 修改页码
@@ -269,7 +286,11 @@ export default {
         // 点击新增、展示新增页面
         handleadd: function () {
             this.insertFormVisible = true;
-            this.$refs['insertForm'].resetFields(); // 重置insertForm
+            this.insertForm.id = '';
+            this.insertForm.userName = '';
+            this.insertForm.mobile = '';
+            this.insertForm.address = '';
+            this.insertForm.remarks = '';
         },
         // 双击展示编辑页面
         handleEdit: function (row) {
@@ -292,7 +313,7 @@ export default {
         },
         // 状态转换
         format: function(row){
-            return row.isUse == 1 ? '已禁用' : row.isUse == 0 ? '启用' : '其他';
+            return row.isUse == 0 ? '在职'  : row.isUse == 1 ? '离职' : row.isUse == 2 ? '辞退'  : row.isUse == 3 ? '退休' : '其他';
         },
         // 时间格式化
         //时间格式化函数，此处仅针对yyyy-MM-dd hh:mm:ss 的格式进行格式化
@@ -318,33 +339,43 @@ export default {
         },
         // 重置按钮
         reset: function (){
-            this.selectForm.userName = '';
-            this.selectForm.mobile = '';
+            this.selectForm.userName = ''; // 重置用户名称查询条件
+            this.selectForm.mobile = ''; // 重置手机号查询条件
         },
-
+        // 新增重置
+        addCancel: function () {
+            this.$refs['insertForm'].resetFields();
+        },
     }
 }
 </script>
 
 <style lang='scss' scoped>
-//@import url(); 引入公共css类
+    //@import url(); 引入公共css类
+    @import "../../../static/css/mixin";
+
     .toolbar {
         background: #fff;
         padding: 10px;
-    //border:1px solid #dfe6ec;
+        //border:1px solid #dfe6ec;
         margin: 0 0 10px 0;
-    .el-form-item {
-        margin-bottom: 10px;
+
+        .el-form-item {
+            margin-bottom: 10px;
+        }
     }
+
+    .el-pagination {
+        background: #fff;
     }
-    .el-pagination{
-        background:#fff;
+
+    .el-table {
+        overflow: auto;
+        max-height: 475px;
     }
-    .el-table{
-        overflow:auto;
-        max-height:475px;
-    }
-    .el-table::before{
-        content:none;
+
+    .el-table::before {
+        content: none;
+        font-size: 10px;
     }
 </style>

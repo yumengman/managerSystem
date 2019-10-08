@@ -4,20 +4,46 @@
             <div class="ms-title">后台管理系统</div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="ruleForm.username" placeholder="username">
+                    <el-input v-model.trim="ruleForm.username" placeholder="username">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')">
+                    <el-input type="password" placeholder="password" v-model.trim="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')">
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                     </el-input>
                 </el-form-item>
                 <div class="login-btn">
-                    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                    <el-button type="primary" @click="login('ruleForm')">登录</el-button>
+                </div>
+                <div class="login-btn">
+                    <el-button type="primary" v-on:click="showRegist" >注册</el-button>
                 </div>
             </el-form>
         </div>
+        <el-dialog :visible.sync="registFlag">
+            <el-form :model="registForm" label-width="20%" :rules="registRules" ref="registForm">
+                <el-form-item label="公司名称" prop="companyName">
+                    <el-input v-model.trim ="registForm.companyName" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="管理员手机号" prop="mobile">
+                    <el-input v-model.trim="registForm.mobile" auto-complete="off" ></el-input>
+                </el-form-item>
+                <el-form-item label="管理员登陆密码" prop="password">
+                    <el-input type="password" v-model.trim="registForm.password" auto-complete="off" ></el-input>
+                </el-form-item>
+                <el-form-item label="地址" prop="address">
+                    <el-input type="textarea" v-model="registForm.address" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="备注" prop="remarks">
+                    <el-input type="textarea" v-model="registForm.remarks" auto-complete="off" ></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer" style="text-align: center">
+                <el-button @click.native="registFlag = false">取消</el-button>
+                <el-button type="primary" @click.native="regist" >提交</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -27,6 +53,7 @@ import {setToken} from '@/utils/auth'
     export default {
         data: function(){
             return {
+                registFlag: false,
                 ruleForm: {
                     username: '18537757128',
                     password: '123456'
@@ -39,11 +66,32 @@ import {setToken} from '@/utils/auth'
                         { required: true, message: '请输入密码', trigger: 'blur' },
                         {min: 6, max: 18, message: '密码最少6位', trigger: 'blur'}
                     ]
-                }
+                },
+                registForm: {
+                    companyName:'',
+                    mobile:'',
+                    password:'',
+                    address:'',
+                    remarks:'',
+                },
+                registRules: {
+                    companyName: [
+                        { required: true, message: '请输入公司名称', trigger: 'blur' }
+                    ],
+                    mobile: [
+                        { required: true, message: '请输入手机号', trigger: 'blur' },
+                        { pattern: /^((13|14|15|17|18|16|19)[0-9]\d{8})$/, message: '手机号格式输入错误' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                        { min: 6, max: 18, message: '密码长度在6位至18位之间', trigger: 'blur' }
+                    ],
+                },
             }
         },
         methods: {
-            submitForm(formName) {
+            // 登陆
+            login(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let data = {'mobile':this.ruleForm.username,'password':this.ruleForm.password};
@@ -56,14 +104,24 @@ import {setToken} from '@/utils/auth'
                             localStorage.setItem('mobile',this.ruleForm.username);
                             setToken(response.data.token);
                             this.$router.push('/home');
-                        }).catch(error => {
-                            console.error(error);
-                        });
-                    } else {
-                        console.log('error submit!!');
-                        return false;
+                        }).catch(error => {});
                     }
                 });
+            },
+            // 注册
+            regist() {
+                request({
+                    url: '/api/companyRegist.json',
+                    method: 'post',
+                    data: this.registForm
+                }).then(response => {
+                    location.href = '/login'
+                }).catch(error => {});
+            },
+            // 展示注册弹框
+            showRegist(){
+                this.registFlag = true;
+                this.$refs['registForm'].resetFields(); // 重置registForm
             }
         }
     }

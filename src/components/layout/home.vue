@@ -10,8 +10,7 @@
                 <!-- <router-view></router-view> -->
             </el-main>
         </el-container>
-</div>
-
+    </div>
 </template>
 
 <script>
@@ -50,7 +49,6 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-
 .home{
     height:100%;
     width:100%;
